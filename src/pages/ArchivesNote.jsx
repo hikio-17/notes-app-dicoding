@@ -1,59 +1,63 @@
 import React from 'react'
-import { getArchivedNotes } from '../utils/local-data'
+import { getArchivedNotes } from '../utils/network-data'
 import CardList from '../components/CardList'
+import { useSearchParams } from 'react-router-dom'
+import LocaleContext from '../context/LocalContext'
+import Loading from '../components/Loading'
 
-class ArchivesNote extends React.Component {
-  constructor (props) {
-    super(props)
-    this.state = {
-      notes: getArchivedNotes(),
-      keyword: ''
+function ArchivesNote () {
+  const [notes, setNotes] = React.useState([])
+  const [searchParams, setSearchParams] = useSearchParams()
+  const [keyword, setKeyword] = React.useState(
+    searchParams.get('keyword') || ''
+  )
+
+  const { loading, onSetLoading, language } = React.useContext(LocaleContext)
+
+  function onKeywordChange (keyword) {
+    setKeyword(keyword)
+    setSearchParams({ keyword })
+  }
+
+  async function fetchGetArchivedNotes () {
+    onSetLoading(true)
+    const { error, data } = await getArchivedNotes()
+    if (!error) {
+      setNotes(data)
     }
-
-    this.onKeywordChange = this.onKeywordChange.bind(this)
+    onSetLoading(false)
   }
 
-  onKeywordChange (keyword) {
-    this.setState(() => {
-      return {
-        keyword
-      }
-    })
-  }
+  React.useEffect(() => {
+    fetchGetArchivedNotes()
+  }, [])
 
-  render () {
-    const notes = this.state.notes.filter(note =>
-      note.title.toLowerCase().includes(this.state.keyword.toLowerCase())
-    )
-    return (
-      <section className='main-content'>
-        <div className='header-content'>
-          <h3>Catatan Arsip</h3>
-          <input
-            type='text'
-            placeholder='Search by title ...'
-            value={this.state.keyword}
-            onChange={e => this.onKeywordChange(e.target.value)}
-          />
-        </div>
+  const filteredNotes = notes.filter(note =>
+    note.title.toLowerCase().includes(keyword.toLowerCase())
+  )
+
+  return (
+    <section className='main-content'>
+      <div className='header-content'>
+        <h3>{language === 'id' ? 'Catatan Arsip' : 'Archive Notes'}</h3>
+        <input
+          type='text'
+          placeholder='Search by title ...'
+          value={keyword}
+          onChange={e => onKeywordChange(e.target.value)}
+        />
+      </div>
+      {loading ? (
+        <Loading />
+      ) : filteredNotes.length ? (
         <div className='notes'>
-          {notes.length ? (
-            <CardList notes={notes} />
-          ) : (
-            <h1
-              style={{
-                textAlign: 'center',
-                color: 'white',
-                marginTop: '100px'
-              }}
-            >
-              Arsip Kosong
-            </h1>
-          )}
+          <CardList notes={filteredNotes} />
         </div>
-      </section>
-    )
-  }
+      ) : (
+        <h1>{language === 'id' ? 'Arsip Kosong' : 'Empty Archive'}</h1>
+      )}
+    </section>
+  )
 }
 
 export default ArchivesNote

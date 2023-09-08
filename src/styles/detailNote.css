@@ -7,7 +7,7 @@
 .detail-note h3 {
    font-size: 28px;
    font-weight: bold;
-   color: lightgray;
+   color: var(--font-color);
    text-decoration: underline;
 }
 
@@ -53,7 +53,7 @@
 }
 
 .button-group span:nth-child(2) svg:hover {
-   color: red;
+   color: #C70039;
 }
 
 .action-group {
@@ -66,7 +66,7 @@
    font-size: 20px;
    font-weight: bold;
    border-style: none;
-   background-color: orangered;
+   background-color: #F6635C;
    border: none;
    cursor: pointer;
    border-radius: 100%;
@@ -78,6 +78,6 @@
 }
 
 .action-group #btn-edit:hover {
-   color: orangered;
+   color: #ffffff;
    background-color: purple;
 }

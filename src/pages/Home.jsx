@@ -1,72 +1,59 @@
-import React from 'react'
-import { useSearchParams } from 'react-router-dom'
-import { getActiveNotes } from '../utils/local-data'
-import CardList from '../components/CardList'
+import React from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { getActiveNotes } from '../utils/network-data';
+import CardList from '../components/CardList';
+import LocaleContext from '../context/LocalContext';
+import Loading from '../components/Loading';
 
-function HomeWrapper() {
+function Home () {
   const [searchParams, setSearchParams] = useSearchParams();
-  const keyword = searchParams.get('keyword');
+  const [notes, setNotes] = React.useState([]);
+  const [keyword, setKeyword] = React.useState(searchParams.get('keyword') || '');
 
-  function changeKeyword(keyword) {
+  const { loading, onSetLoading, language } = React.useContext(LocaleContext)
+
+  function onKeywordChange (keyword) {
+    setKeyword(keyword)
     setSearchParams({ keyword })
   }
 
-  return <Home defaultKeyword={keyword} onChangeKeyword={changeKeyword} />
-}
-
-class Home extends React.Component {
-  constructor (props) {
-    super(props)
-
-    this.state = {
-      notes: getActiveNotes(),
-      keyword: this.props.defaultKeyword || ''
+  async function fetchGetActiveNotes () {
+    onSetLoading(true)
+    const { error, data } = await getActiveNotes()
+    if (!error) {
+      setNotes(data)
     }
-    this.onKeywordChange = this.onKeywordChange.bind(this)
-  }
-  onKeywordChange (keyword) {
-    this.setState(() => {
-      return {
-        keyword
-      }
-    })
-
-    this.props.onChangeKeyword(keyword)
+    onSetLoading(false);
   }
 
-  render () {
-    const notes = this.state.notes.filter(note =>
-      note.title.toLowerCase().includes(this.state.keyword.toLowerCase())
-    )
-    return (
-      <section className='main-content'>
-        <div className='header-content'>
-          <h3>Catatan Aktif</h3>
-          <input
-            type='text'
-            placeholder='Search by title ...'
-            value={this.state.keyword}
-            onChange={e => this.onKeywordChange(e.target.value)}
-          />
-        </div>
+  React.useEffect(() => {
+    fetchGetActiveNotes()
+  }, [])
+
+  const filteredNotes = notes.filter(note =>
+    note.title.toLowerCase().includes(keyword.toLowerCase())
+  )
+
+  return (
+    <section className='main-content'>
+      <div className='header-content'>
+        <h3>{language === 'id' ? 'Catatan Aktif' : 'Active Notes'}</h3>
+        <input
+          type='text'
+          placeholder='Search by title ...'
+          value={keyword}
+          onChange={e => onKeywordChange(e.target.value)}
+        />
+      </div>
+      {loading ? <Loading /> : filteredNotes.length ? (
         <div className='notes'>
-          {notes.length ? (
-            <CardList notes={notes} />
-          ) : (
-            <h1
-              style={{
-                textAlign: 'center',
-                color: 'white',
-                marginTop: '100px'
-              }}
-            >
-              Tidak Ada Catatan
-            </h1>
-          )}
-        </div>
-      </section>
-    )
-  }
+        <CardList notes={filteredNotes} />
+      </div>
+      ) : (
+        <h1>{language === 'id' ? 'Tidak ada catatan' : 'No notes'}</h1>
+      )}
+    </section>
+  )
 }
 
-export default HomeWrapper
+export default Home

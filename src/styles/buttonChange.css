@@ -1,0 +1,25 @@
+#button-change {
+   background-color: purple;
+   display: flex;
+   flex-direction: column;
+   width: 100px;
+   position: absolute;
+   top: 50%;
+   height: 100px;
+   border-top-right-radius: 20px;
+   border-bottom-right-radius: 20px;
+   justify-content: space-around;
+}
+
+#button-change button{
+   cursor: pointer;
+   height: 40px;
+   width: 80%;
+   border: none;
+   border-radius: 10px;
+}
+
+#button-change button svg {
+   width: 25px;
+   height: 25px;
+}

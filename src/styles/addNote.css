@@ -7,7 +7,7 @@
 .add-note h3 {
    font-size: 28px;
    font-weight: bold;
-   color: lightgray;
+   color: var(--font-color);
    text-decoration: underline;
 }
 
@@ -31,7 +31,7 @@
 
 .form-add-note .input-body {
    margin-top: 15px;
-   background-color: #ffffff;
+   background-color: lightgray;
    border-radius: 15px;
    height: 300px;
    color: purple;
@@ -54,5 +54,5 @@
 }
 
 #btn-save:hover {
-   background-color: greenyellow;
+   background-color: #5B9A8B;
 }

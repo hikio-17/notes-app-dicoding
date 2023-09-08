@@ -1,84 +1,57 @@
-import React from 'react'
-import '../styles/addNote.css'
-import { addNote } from '../utils/local-data'
-import { useNavigate } from 'react-router-dom'
-import PropTypes from 'prop-types'
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { addNote } from '../utils/network-data';
+import useInput from '../hooks/useInput';
+import LocaleContext from '../context/LocalContext';
 
-function AddNoteWrapper () {
-  const navigate = useNavigate()
+function AddNote() {
+   const navigate = useNavigate();
+   const [title, onTitleChange] = useInput('');
+   const [body, setBody] = useState('');
 
-  function onSubmitHandler (note) {
-    addNote(note)
-    navigate('/')
-  }
+   const { language } = React.useContext(LocaleContext);
 
-  return <AddNote onSubmitHandler={onSubmitHandler} />
-}
+   async function onSubmitHandler() {
+      const { error } = await addNote({ title, body });
 
-class AddNote extends React.Component {
-  constructor (props) {
-    super(props)
-
-    this.state = {
-      title: '',
-      body: ''
-    }
-
-    this.onInputHandler = this.onInputHandler.bind(this)
-    this.onChangeHandler = this.onChangeHandler.bind(this)
-  }
-
-  onChangeHandler (event) {
-    this.setState(() => {
-      return {
-        title: event.target.value
+      if (!error) {
+        navigate('/');
       }
-    })
-  }
+   }
 
-  onInputHandler (event) {
-    this.setState(() => {
-      return {
-        body: event.target.innerHTML
-      }
-    })
-  }
+   function onInputHandler(event) {
+      setBody(event.target.innerHTML);
+   }
 
-  render () {
-    return (
+   return (
       <section className='add-note'>
-        <h3>Add Note</h3>
+        <h3>{language === 'id' ? 'Tambah Catatan' : 'Add Note'}</h3>
         <div className='form-add-note'>
           <input
             type='text'
             placeholder='Title...'
-            value={this.state.title}
-            onChange={this.onChangeHandler}
+            value={title}
+            onChange={onTitleChange}
           />
           <div className='body'>
             <div
               className='input-body'
               contentEditable
-              onInput={this.onInputHandler}
+              onInput={onInputHandler}
               suppressContentEditableWarning={true}
             >
-              {this.state.body === '' ? 'Add your note...' : ''}
+              {body === '' ? 'Add your note...' : ''}
             </div>
             <button
               id='btn-save'
-              onClick={() => this.props.onSubmitHandler(this.state)}
+              onClick={onSubmitHandler}
             >
-              Save
+              {language === 'id' ? 'Simpan' : 'Save'}
             </button>
           </div>
         </div>
       </section>
     )
-  }
 }
 
-AddNote.propTypes = {
-  onSubmitHandler: PropTypes.func.isRequired
-}
-
-export default AddNoteWrapper
+export default AddNote;
