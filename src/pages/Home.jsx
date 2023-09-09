@@ -1,14 +1,16 @@
-import React from 'react';
-import { useSearchParams } from 'react-router-dom';
-import { getActiveNotes } from '../utils/network-data';
-import CardList from '../components/CardList';
-import LocaleContext from '../context/LocalContext';
-import Loading from '../components/Loading';
+import React from 'react'
+import { useSearchParams } from 'react-router-dom'
+import { getActiveNotes } from '../utils/network-data'
+import CardList from '../components/CardList'
+import LocaleContext from '../context/LocalContext'
+import Loading from '../components/Loading'
 
 function Home () {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [notes, setNotes] = React.useState([]);
-  const [keyword, setKeyword] = React.useState(searchParams.get('keyword') || '');
+  const [searchParams, setSearchParams] = useSearchParams()
+  const [notes, setNotes] = React.useState([])
+  const [keyword, setKeyword] = React.useState(
+    searchParams.get('keyword') || ''
+  )
 
   const { loading, onSetLoading, language } = React.useContext(LocaleContext)
 
@@ -23,7 +25,7 @@ function Home () {
     if (!error) {
       setNotes(data)
     }
-    onSetLoading(false);
+    onSetLoading(false)
   }
 
   React.useEffect(() => {
@@ -45,10 +47,12 @@ function Home () {
           onChange={e => onKeywordChange(e.target.value)}
         />
       </div>
-      {loading ? <Loading /> : filteredNotes.length ? (
+      {loading ? (
+        <Loading />
+      ) : filteredNotes.length ? (
         <div className='notes'>
-        <CardList notes={filteredNotes} />
-      </div>
+          <CardList notes={filteredNotes} />
+        </div>
       ) : (
         <h1>{language === 'id' ? 'Tidak ada catatan' : 'No notes'}</h1>
       )}

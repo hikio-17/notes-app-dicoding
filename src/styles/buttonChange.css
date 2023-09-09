@@ -2,21 +2,25 @@
    background-color: purple;
    display: flex;
    flex-direction: column;
-   width: 100px;
+   width: 80px;
    position: absolute;
    top: 50%;
    height: 100px;
-   border-top-right-radius: 20px;
-   border-bottom-right-radius: 20px;
-   justify-content: space-around;
+   border-radius: 20px;
+   justify-content: space-between;
+   box-shadow: 5px 5px 5px rgb(0, 0, 0, .2);
 }
 
 #button-change button{
    cursor: pointer;
    height: 40px;
-   width: 80%;
+   width: 100%;
    border: none;
    border-radius: 10px;
+}
+
+#button-change button:hover {
+   box-shadow: 0px 0px 10px rgb(228, 105, 61);
 }
 
 #button-change button svg {

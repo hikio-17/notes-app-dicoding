@@ -1,48 +1,49 @@
-import React from 'react';
-import '../styles/addNote.css';
-import { getNote } from '../utils/network-data';
-import { useNavigate, useParams } from 'react-router-dom';
-import parser from 'html-react-parser';
-import useInput from './../hooks/useInput';
+import React from 'react'
+import parser from 'html-react-parser'
+import { useNavigate, useParams } from 'react-router-dom'
+import { getNote } from '../utils/network-data'
+import useInput from './../hooks/useInput'
+import '../styles/addNote.css'
 
-function EditNote() {
-   const navigate = useNavigate();
-   const { id } = useParams();
-   const [note, setNote] = React.useState(null);
-   const [title, onTitleChange] = useInput('');
-   const [body, setBody] = React.useState('');
+function EditNote () {
+  const navigate = useNavigate()
+  const { id } = useParams()
+  const [note, setNote] = React.useState(null)
+  const [title, onTitleChange] = useInput('')
+  const [body, setBody] = React.useState('')
 
-   React.useEffect(() => {
-      async function fetchGetNote() {
-         const { error, data } = await getNote(id);
+  React.useEffect(() => {
+    async function fetchGetNote () {
+      const { error, data } = await getNote(id)
 
-         if (!error) {
-            setNote(data);
-         }
+      if (!error) {
+        setNote(data)
       }
+    }
 
-      fetchGetNote();
-   }, []);
+    fetchGetNote()
+  }, [])
 
-   function onSubmitHandler() {
-      alert({
-         message: 'Fungsinya masih belum disediakan',
-         data: {
-            title,
-            body
-         }
-      });
-      navigate('/')
-   }
+  function onSubmitHandler () {
+    alert({
+      message: 'Fungsinya masih belum disediakan',
+      data: {
+        title,
+        body
+      }
+    })
+    navigate('/')
+  }
 
-   function onInputHandler(event) {
-      setBody(event.target.innerHTML)
-   }
+  function onInputHandler (event) {
+    setBody(event.target.innerHTML)
+  }
 
-   return (
-      <section className='add-note'>
-        <h3>Edit Note</h3>
-        {note && <div className='form-add-note'>
+  return (
+    <section className='add-note'>
+      <h3>Edit Note</h3>
+      {note && (
+        <div className='form-add-note'>
           <input
             type='text'
             placeholder='Title...'
@@ -58,16 +59,14 @@ function EditNote() {
             >
               {parser(note.body)}
             </div>
-            <button
-              id='btn-save'
-              onClick={onSubmitHandler}
-            >
+            <button id='btn-save' onClick={onSubmitHandler}>
               Save
             </button>
           </div>
-        </div>}
-      </section>
-    )
+        </div>
+      )}
+    </section>
+  )
 }
 
-export default EditNote;
+export default EditNote

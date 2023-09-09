@@ -1,9 +1,9 @@
 import React from 'react'
-import { dateFormatter } from '../utils/local-data'
-import Button from './Button'
 import parser from 'html-react-parser'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
+import { dateFormatter } from '../utils/local-data'
+import Button from './Button'
 
 function Note ({
   note,

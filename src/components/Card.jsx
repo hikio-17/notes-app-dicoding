@@ -1,9 +1,9 @@
 import React from 'react'
+import parser from 'html-react-parser'
 import { Link } from 'react-router-dom'
-import '../styles/card.css'
 import PropTypes from 'prop-types'
 import { dateFormatter } from '../utils/local-data'
-import parser from 'html-react-parser'
+import '../styles/card.css'
 
 function Card ({ id, title, body, createdAt }) {
   return (
@@ -33,6 +33,6 @@ export const cardItemPropTypes = {
   createdAt: PropTypes.string.isRequired
 }
 
-Card.propTypes = cardItemPropTypes;
+Card.propTypes = cardItemPropTypes
 
 export default Card

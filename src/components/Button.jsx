@@ -1,6 +1,6 @@
 import React from 'react'
-import { FaArrowCircleDown, FaTrash, FaArrowAltCircleUp } from 'react-icons/fa'
 import PropTypes from 'prop-types'
+import { FaArrowCircleDown, FaTrash, FaArrowAltCircleUp } from 'react-icons/fa'
 
 function Button ({
   id,

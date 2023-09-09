@@ -1,6 +1,6 @@
-import React, { useEffect, useMemo, useState } from 'react'
-import Navbar from './components/Navbar'
+import React from 'react'
 import { Routes, Route, useNavigate } from 'react-router-dom'
+import Navbar from './components/Navbar'
 import Home from './pages/Home'
 import DetailNote from './pages/DetailNote'
 import ArchivesNote from './pages/ArchivesNote'
@@ -15,15 +15,19 @@ import { LocaleProvider } from './context/LocalContext'
 import ButtonChange from './components/ButtonChange'
 
 function App () {
-  const [authedUser, setAuthedUser] = useState(null);
-  const [initializing, setInitializing] = useState(true);
-  const [theme, setTheme] = React.useState(() => localStorage.getItem('theme') || 'dark');
-  const [loading, setLoading] = useState(false);
-  const [language, setLanguage] = React.useState(() => localStorage.getItem('language') || 'id');
+  const [authedUser, setAuthedUser] = React.useState(null)
+  const [initializing, setInitializing] = React.useState(true)
+  const [theme, setTheme] = React.useState(
+    () => localStorage.getItem('theme') || 'dark'
+  )
+  const [loading, setLoading] = React.useState(false)
+  const [language, setLanguage] = React.useState(
+    () => localStorage.getItem('language') || 'id'
+  )
 
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
-  const localeContext = useMemo(() => {
+  const localeContext = React.useMemo(() => {
     return {
       authedUser,
       loading,
@@ -31,37 +35,37 @@ function App () {
       language,
       onToggleTheme,
       onSetLoading,
-      onToggleChangeLanguage,
+      onToggleChangeLanguage
     }
-  }, [authedUser, loading, theme, language]);
+  }, [authedUser, loading, theme, language])
 
-  function onSetLoading(value) {
-    setLoading(value);
+  function onSetLoading (value) {
+    setLoading(value)
   }
 
-  function onToggleTheme() {
-    setTheme((prevState) => {
+  function onToggleTheme () {
+    setTheme(prevState => {
       const newTheme = prevState === 'light' ? 'dark' : 'light'
-      localStorage.setItem('theme', newTheme);
-      document.documentElement.setAttribute('data-theme', newTheme);
-      return newTheme;
-    });
+      localStorage.setItem('theme', newTheme)
+      document.documentElement.setAttribute('data-theme', newTheme)
+      return newTheme
+    })
   }
 
-  function onToggleChangeLanguage() {
-    setLanguage((prevState) => {
-      const newLanguage = prevState === 'id' ? 'en' : 'id';
-      localStorage.setItem('language', newLanguage);
-      return newLanguage;
-    });
+  function onToggleChangeLanguage () {
+    setLanguage(prevState => {
+      const newLanguage = prevState === 'id' ? 'en' : 'id'
+      localStorage.setItem('language', newLanguage)
+      return newLanguage
+    })
   }
 
   async function onLoginSuccess ({ accessToken }) {
     putAccessToken(accessToken)
-    const { data } = await getUserLogged();
+    const { data } = await getUserLogged()
 
-    setAuthedUser(data);
-    navigate('/');
+    setAuthedUser(data)
+    navigate('/')
   }
 
   function onLogoutHandler () {
@@ -69,22 +73,25 @@ function App () {
     setAuthedUser(null)
   }
 
-  async function fetchGetUserLogged () {
-    const { error, data } = await getUserLogged()
+  React.useEffect(() => {
+    async function fetchGetUserLogged () {
+      const { error, data } = await getUserLogged()
 
-    if (!error) {
-      setAuthedUser(data);
-      setInitializing(false);
+      if (!error) {
+        setAuthedUser(data)
+      }
+      setInitializing(false)
     }
+    fetchGetUserLogged()
+    document.documentElement.setAttribute(
+      'data-theme',
+      localStorage.getItem('theme')
+    )
+  }, [])
+
+  if (initializing) {
+    return null
   }
-
-  useEffect(() => {
-    fetchGetUserLogged();
-    document.documentElement.setAttribute('data-theme', localStorage.getItem('theme'));
-
-  }, []);
-
-  if (initializing) return null
 
   return (
     <LocaleProvider value={localeContext}>
@@ -96,33 +103,47 @@ function App () {
         <ButtonChange />
         <Routes>
           <Route path='/register' element={<RegisterPage />} />
+          <Route
+            path='/login'
+            element={<LoginPage onLoginSuccess={onLoginSuccess} />}
+          />
           <Route path='*' element={<NotFound />} />
-          <Route path='/login' element={<LoginPage onLoginSuccess={onLoginSuccess} />} />
-          <Route path='/' element={
+
+          <Route
+            path='/'
+            element={
               <Protected>
                 <Home />
               </Protected>
             }
           />
-          <Route path='/notes/new' element={
+          <Route
+            path='/notes/new'
+            element={
               <Protected>
                 <AddNote />
               </Protected>
             }
           />
-          <Route path='/notes/:id' element={
+          <Route
+            path='/notes/:id'
+            element={
               <Protected>
                 <DetailNote />
               </Protected>
             }
           />
-          <Route path='/archives' element={
+          <Route
+            path='/archives'
+            element={
               <Protected>
                 <ArchivesNote />
               </Protected>
             }
           />
-          <Route path='/notes/edit/:id' element={
+          <Route
+            path='/notes/edit/:id'
+            element={
               <Protected>
                 <EditNote />
               </Protected>

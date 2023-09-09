@@ -1,7 +1,7 @@
 import React from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { getArchivedNotes } from '../utils/network-data'
 import CardList from '../components/CardList'
-import { useSearchParams } from 'react-router-dom'
 import LocaleContext from '../context/LocalContext'
 import Loading from '../components/Loading'
 

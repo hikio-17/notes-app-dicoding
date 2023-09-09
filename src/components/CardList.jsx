@@ -13,7 +13,7 @@ function CardList ({ notes }) {
 }
 
 CardList.propTypes = {
-  notes: PropTypes.arrayOf(PropTypes.shape(cardItemPropTypes)).isRequired,
+  notes: PropTypes.arrayOf(PropTypes.shape(cardItemPropTypes)).isRequired
 }
 
 export default CardList

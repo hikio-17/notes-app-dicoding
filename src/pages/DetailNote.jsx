@@ -16,7 +16,7 @@ function DetailNote () {
   const { id } = useParams()
   const [note, setNote] = React.useState(null)
 
-  const { loading, onSetLoading } = React.useContext(LocaleContext)
+  const { loading, onSetLoading, language } = React.useContext(LocaleContext)
 
   async function fetchGetNote () {
     onSetLoading(true)
@@ -27,6 +27,7 @@ function DetailNote () {
     }
     onSetLoading(false)
   }
+
   React.useEffect(() => {
     fetchGetNote()
   }, [])
@@ -48,7 +49,7 @@ function DetailNote () {
 
   return (
     <section className='detail-note'>
-      <h3>Detail Note</h3>
+      <h3>{language === 'id' ? 'Detail Note' : 'Detail Notes'}</h3>
       {loading ? (
         <Loading />
       ) : note !== null ? (
@@ -59,7 +60,11 @@ function DetailNote () {
           handleDeleteNote={onHandleDeleteNote}
         />
       ) : (
-        !note && <h1 style={{ color: 'white', fontSize: '32px', textAlign: 'center'}}>Catatan tidak ditemukan</h1>
+        !note && (
+          <h1 style={{ color: 'white', fontSize: '32px', textAlign: 'center', marginTop: '100px' }}>
+            {language === 'id' ? 'Catatan tidak ditemukan' : 'Note not found'}
+          </h1>
+        )
       )}
     </section>
   )

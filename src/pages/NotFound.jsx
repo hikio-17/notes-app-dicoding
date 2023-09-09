@@ -2,7 +2,7 @@ import React from 'react'
 
 function NotFound () {
   return (
-    <h1 style={{ textAlign: 'center', color: 'white', marginTop: '100px' }}>
+    <h1 className='not-found'>
       Page Not Found
     </h1>
   )

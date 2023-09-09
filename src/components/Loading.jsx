@@ -14,7 +14,7 @@ const Loading = () => {
       </div>
       <h1>Sabar dulu ey...</h1>
     </>
-  );
+  )
 }
 
 export default Loading
